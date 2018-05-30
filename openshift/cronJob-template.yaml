@@ -20,7 +20,8 @@ objects:
   metadata:
     name: kebechet
     labels:
-      app: kebechet
+      app: thoth
+      component: kebechet
   spec:
     schedule: "*/30 * * * *"
     suspend: true
@@ -35,14 +36,16 @@ objects:
             - image: kebechet-job
               name: kebechet
               env:
+              - name: APP_FILE
+                value: "kebechet-cli"
               - name: GITHUB_OAUTH_TOKEN
-                valuefrom:
-                  secretkeyref:
+                valueFrom:
+                  secretKeyRef:
                     key: token
                     name: kebechet-github
               - name: KEBECHET_CONFIG
-                valuefrom:
-                  configmapkeyref:
+                valueFrom:
+                  configMapKeyRef:
                     key: thoth
                     name: kebechet
               resources:

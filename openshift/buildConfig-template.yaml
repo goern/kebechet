@@ -55,6 +55,13 @@ objects:
         kind: ImageStreamTag
         name: "kebechet-job:${IMAGE_STREAM_TAG}"
     runPolicy: Serial
+    resources:
+      limits:
+        cpu: '1'
+        memory: 256Mi
+      requests:
+        cpu: '1'
+        memory: 512Mi
     source:
       git:
         uri: ${GITHUB_URL}

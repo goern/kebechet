@@ -7,6 +7,8 @@ I'm Kebechet, goddess of freshness. I will keep your dependencies fresh and up-t
 
 # Deploying the Bot
 
+By default the cronjob is suspended, if you have deployed everything and want to enable the execution of the cronjob: `oc patch cronjob kebechet -p '{"spec":{"suspend": false}}'`.
+
 ## Prerequisites
 
 A SSH key pair at `kebechet_github`, create it using something like `ssh-keygen -C "Kebechet's SSH key for GitHub" -f kebechet_github -N ''`.
