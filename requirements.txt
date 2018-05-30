@@ -3,4 +3,7 @@ daiquiri
 pipenv
 requests
 toml
+pyyaml
 delegator.py
+pygithub
+gitpython
