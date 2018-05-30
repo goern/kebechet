@@ -6,9 +6,9 @@ labels:
 metadata:
   name: kebechet-cronjob
   annotations:
-    description: This is Kebechet CronJob BuildConfig, this template is meant to be used by Jenkins, but could also be used by humans...
+    description: This is Kebechet CronJob, this template is meant to be used by DevOps...
     openshift.io/display-name: Kebechet CronJob
-    version: 0.2.0
+    version: 0.1.0
     tags: poc,thoth,ai-stacks,kebechet
     template.openshift.io/documentation-url: https://github.com/AICoE/Thoth/
     template.openshift.io/long-description: This is Kebechet used for automatic package releases and updates.
@@ -37,13 +37,13 @@ objects:
               env:
               - name: GITHUB_OAUTH_TOKEN
                 valuefrom:
-                  configmapkeyref:
-                    key: github-oauth-token
-                    name: kebechet
+                  secretkeyref:
+                    key: token
+                    name: kebechet-github
               - name: KEBECHET_CONFIG
                 valuefrom:
                   configmapkeyref:
-                    key: kebechet-config
+                    key: thoth
                     name: kebechet
               resources:
                 requests:

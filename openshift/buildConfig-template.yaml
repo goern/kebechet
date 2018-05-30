@@ -8,7 +8,7 @@ metadata:
   annotations:
     description: This is Kebechet CronJob BuildConfig, this template is meant to be used by Jenkins, but could also be used by humans...
     openshift.io/display-name: Kebechet BuildConfig
-    version: 0.2.0
+    version: 0.1.0
     tags: poc,thoth,ai-stacks,kebechet
     template.openshift.io/documentation-url: https://github.com/AICoE/Thoth/
     template.openshift.io/long-description: This is Kebechet used for automatic package releases and updates.
@@ -19,7 +19,8 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
-      app: kebechet
+      app: thoth
+      component: kebechet
     name: kebechet-job
   spec:
     output:

@@ -19,7 +19,8 @@ objects:
   kind: ImageStream
   metadata:
     labels:
-      app: kebechet
+      app: thoth
+      component: kebechet
     name: kebechet-job
   spec:
     name: latest

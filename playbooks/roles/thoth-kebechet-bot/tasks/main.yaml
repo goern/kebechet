@@ -1,0 +1,80 @@
+---
+  - name: "make sure to use project {{ THOTH_INFRA_NAMESPACE }}"
+    command: "oc project {{ THOTH_INFRA_NAMESPACE }}"
+    register: project_exists
+    ignore_errors: true
+    changed_when: False
+
+  - name: create/update Thoth Kebechet CronJob templates
+    command: oc apply --namespace "{{ THOTH_INFRA_NAMESPACE  }}" --filename "{{ item }}"
+    with_items:
+      - ../openshift/cronJob-template.yaml
+      
+  - name: create/update Thoth Kebechet BuildConfig templates
+    command: oc apply --namespace "{{ THOTH_INFRA_NAMESPACE  }}" --filename "{{ item }}" 
+    with_items:
+      - ../openshift/buildConfig-template.yaml
+
+  - name: create/update Thoth Kebechet ImageStream templates
+    command: oc apply --namespace "{{ THOTH_INFRA_NAMESPACE  }}" --filename "{{ item }}"
+    with_items:
+      - ../openshift/imageStream-template.yaml
+
+  - name: "make sure to use project {{ THOTH_FRONTEND_NAMESPACE }}"
+    command: "oc project {{ THOTH_FRONTEND_NAMESPACE }}"
+    register: project_exists
+    ignore_errors: true
+    changed_when: False
+
+  - name: "check if required Secret 'kebechet-github' exists"
+    command: "oc get secret --namespace {{ THOTH_INFRA_NAMESPACE }} kebechet-github"
+    register: secret_exists
+    ignore_errors: true
+
+  - name: create Secret with SSH Key and Access Token for GitHub
+    command: oc create secret --namespace "{{ THOTH_FRONTEND_NAMESPACE }}" generic kebechet-github \
+      --from-file=ssh-privatekey=../kebechet_github \
+      --from-literal=token="{{ GITHUB_AUTH_TOKEN }}"      
+      --type=kubernetes.io/ssh-auth
+    when: secret_exists is failed
+
+  - name: "check if required ConfigMap 'kebechet' exists"
+    command: "oc get configmap --namespace {{ THOTH_INFRA_NAMESPACE }} kebechet"
+    register: configmap_exists
+    ignore_errors: true
+    changed_when: False
+
+  - name: create ConfigMap
+    command: oc create configmap --namespace "{{ THOTH_FRONTEND_NAMESPACE  }}" kebechet \
+      --from-file=thoth=../config/thoth.yaml
+    when: configmap_exists is failed
+
+  - name: "check if ImageStream exists"
+    command: "oc get imagestream --namespace {{ THOTH_INFRA_NAMESPACE }} kebechet-job"
+    register: imagestream_exists
+    ignore_errors: true
+    changed_when: False
+
+  - name: create Kebechet ImageStream
+    command: oc new-app --template="{{ THOTH_INFRA_NAMESPACE  }}/kebechet-imagestream"
+    when: imagestream_exists is failed
+
+  - name: "check if BuildConfig exists"
+    command: "oc get buildconfig --namespace {{ THOTH_INFRA_NAMESPACE }} kebechet-job"
+    register: buildconfig_exists
+    ignore_errors: true
+    changed_when: False
+
+  - name: create Kebechet BuildConfig
+    command: oc new-app --template="{{ THOTH_INFRA_NAMESPACE  }}/kebechet-buildconfig"
+    when: buildconfig_exists is failed
+
+  - name: "check if CronJob exists"
+    command: "oc get cronjob --namespace {{ THOTH_INFRA_NAMESPACE }} kebechet"
+    register: cronjob_exists
+    ignore_errors: true
+    changed_when: False
+    
+  - name: create Kebechet CronJob
+    command: oc new-app --template="{{ THOTH_INFRA_NAMESPACE  }}/kebechet-cronjob"
+    when: cronjob_exists is failed

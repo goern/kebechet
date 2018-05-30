@@ -1,0 +1,21 @@
+---
+- name: Playbook to provision Thoth's Kebechet Bot
+  tags:
+    - openshift
+    - thoth
+    - kebechet
+    - bot
+
+  hosts: localhost
+  vars:
+    OPENSHIFT_MASTER_URL: "{{ lookup('env','OCP_URL') }}"
+    OPENSHIFT_AUTH_TOKEN: "{{ lookup('env','OCP_TOKEN') }}"
+    # THOTH_FRONTEND_NAMESPACE should be provided via command like argument
+    # THOTH_INFRA_NAMESPACE should be provided via command like argument
+    # GITHUB_AUTH_TOKEN should be provided via command like argument
+    # KEBECHET_CONFIG_FILENAME should be provided via command like argument
+    
+  gather_facts: false
+  connection: local
+  roles:
+  - role: thoth-kebechet-bot
