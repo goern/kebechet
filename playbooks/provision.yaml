@@ -18,4 +18,5 @@
   gather_facts: false
   connection: local
   roles:
+  - role: thoth-station.thoth-core-imagestreams
   - role: thoth-kebechet-bot
