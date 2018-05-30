@@ -27,3 +27,14 @@ objects:
     lookupPolicy:
       local: true
 
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    labels:
+      app: thoth
+      component: kebechet
+    name: python-36-centos7-git
+  spec:
+    name: latest
+    lookupPolicy:
+      local: true

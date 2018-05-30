@@ -20,6 +20,33 @@ objects:
   metadata:
     labels:
       app: thoth
+    name: python-36-centos7-git
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: python-36-centos7-git:latest
+    runPolicy: Serial
+    source:
+      type: Git
+      git:
+        uri: ${GITHUB_URL}
+        ref: ${GITHUB_REF}
+    strategy:
+      type: Docker
+      dockerStrategy:
+        from:
+          kind: ImageStreamTag
+          name: python-36-centos7:latest
+    triggers:
+    - imageChange: {}
+      type: ImageChange
+
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      app: thoth
       component: kebechet
     name: kebechet-job
   spec:
@@ -38,7 +65,7 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: python-36-centos7:latest
+          name: python-36-centos7-git:latest
         env:
         - name: ENABLE_PIPENV
           value: '1'

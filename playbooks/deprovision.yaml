@@ -1,0 +1,29 @@
+---
+- name: Playbook to deprovision Thoth's Kebechet Bot deployment
+  tags:
+    - openshift
+    - thoth
+    - bot
+    - devops
+
+  hosts: localhost
+  vars:
+    OPENSHIFT_MASTER_URL: "{{ lookup('env','OCP_URL') }}"
+    OPENSHIFT_AUTH_TOKEN: "{{ lookup('env','OCP_TOKEN') }}"
+    # THOTH_FRONTEND_NAMESPACE should be provided via command like argument
+    
+  gather_facts: false
+  connection: local
+
+  tasks:
+  - name: "deleting Objects"
+    command: "oc delete {{ item }} --namespace {{ THOTH_FRONTEND_NAMESPACE }}"
+    with_items:
+      - "secret/kebechet-github"
+      - "configmap/kebechet"
+      - "imagestreams/python-36-centos7"
+      - "imagestreams/python-36-centos7-git"
+      - "imagestreams/kebechet-job"
+      - "buildconfig/kebechet-job"
+      - "buildconfig/python-36-centos7-git"
+      - "cronjob/kebechet"

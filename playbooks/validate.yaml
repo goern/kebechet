@@ -31,7 +31,8 @@
   - name: "checking for ImageStreams"
     command: "oc get {{ item }} --namespace {{ THOTH_FRONTEND_NAMESPACE }}"
     with_items:
-      - "imagestreams/python-36-centos7"  
+      - "imagestreams/python-36-centos7"
+      - "imagestreams/python-36-centos7-git"
       - "imagestreams/kebechet-job"
     changed_when: False
 
@@ -39,6 +40,7 @@
     command: "oc get buildconfig {{ item }} --namespace {{ THOTH_FRONTEND_NAMESPACE }}"
     with_items:
       - "kebechet-job"
+      - "python-36-centos7-git"
     changed_when: False
 
   - name: "checking for CronJobs"
