@@ -23,10 +23,11 @@ objects:
       app: thoth
       component: kebechet
   spec:
-    schedule: "*/30 * * * *"
-    suspend: true
-    successfulJobsHistoryLimit: 10
+    schedule: "* * * * *"
+    suspend: false
+    successfulJobsHistoryLimit: 2
     failedJobsHistoryLimit: 1
+    startingDeadlineSeconds: 90
     concurrencyPolicy: Forbid
     jobTemplate:
       spec:
@@ -35,6 +36,7 @@ objects:
             containers:
             - image: kebechet-job
               name: kebechet
+              args: ["./kebechet-cli", "--verbose", "--github-token", "${GITHUB_OAUTH_TOKEN}", "run", "/opt/app-root/etc/kebechet.d/thoth.conf"]
               env:
               - name: APP_FILE
                 value: "kebechet-cli"
@@ -43,11 +45,9 @@ objects:
                   secretKeyRef:
                     key: token
                     name: kebechet-github
-              - name: KEBECHET_CONFIG
-                valueFrom:
-                  configMapKeyRef:
-                    key: thoth
-                    name: kebechet
+              volumeMounts:
+              - name: config
+                mountPath: /opt/app-root/etc/kebechet.d/
               resources:
                 requests:
                   memory: "128Mi"
@@ -56,3 +56,10 @@ objects:
                   memory: "256Mi"
                   cpu: "500m"
             restartPolicy: Never
+            volumes:
+              - name: config
+                configMap:
+                  name: kebechet
+                  items:
+                  - key: thoth
+                    path: thoth.conf

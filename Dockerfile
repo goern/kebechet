@@ -22,6 +22,14 @@ USER 0
 RUN yum install -y --setopt=tsflags=nodocs epel-release && \
     yum install -y --setopt=tsflags=nodocs --enablerepo=epel rh-git29 which
 
+
 # fall back to S2I user
 # see https://github.com/sclorg/s2i-python-container/blob/master/3.6/Dockerfile#L64
 USER 1001
+
+ENV USER_NAME=kebechet \
+    USER_UID=1001
+
+COPY container-root ${APP_ROOT}
+
+ENTRYPOINT [ "/opt/app-root/bin/nss_entrypoint" ]
