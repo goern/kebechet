@@ -60,11 +60,16 @@ def cli(ctx=None, verbose=0, github_token=None):
 
 
 @cli.command('update')
-@click.option('--label', type=str, default=None, metavar='LABEL1,LABEL2',
+@click.option('--label', type=str, default='bot', metavar='LABEL1,LABEL2',
               help="Labels to be applied for opened pull requests.")
 @click.argument('slug')
 def cli_update(slug, label=None):
     """Update packages in the given repository (slug is org/repo) and open pull requests."""
+
+    # FIXME click default for label was None, so None.split() raised an AttributeError 
+    if label is None:
+        update(slug, [])
+
     update(slug, label.split(','))
 
 
