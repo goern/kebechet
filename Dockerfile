@@ -19,8 +19,9 @@ LABEL summary="$SUMMARY" \
 # we need to be root as we want to install stuff
 USER 0
 
-RUN yum install -y --setopt=tsflags=nodocs epel-release && \
-    yum install -y --setopt=tsflags=nodocs --enablerepo=epel rh-git29 which
+RUN yum install -y --setopt=tsflags=nodocs rh-git29 which && \
+    touch ${APP_ROOT}/etc/passwd && \
+    chmod 666 ${APP_ROOT}/etc/passwd
 
 
 # fall back to S2I user

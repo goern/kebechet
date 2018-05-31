@@ -4,8 +4,11 @@ echo "Moin, this is nss_wrapper, running $@ ..."
 
 export USER_ID=$(id -u)
 export GROUP_ID=$(id -g)
+
 # FIXME it might be that this file cant be written on container start
 envsubst < ${APP_ROOT}/etc/passwd.template > ${APP_ROOT}/etc/passwd
+chmod 644 ${APP_ROOT}/etc/passwd
+
 export LD_PRELOAD=/usr/lib64/libnss_wrapper.so
 export NSS_WRAPPER_PASSWD=${APP_ROOT}/etc/passwd
 export NSS_WRAPPER_GROUP=/etc/group
