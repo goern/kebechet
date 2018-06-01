@@ -19,10 +19,7 @@ LABEL summary="$SUMMARY" \
 # we need to be root as we want to install stuff
 USER 0
 
-RUN yum install -y --setopt=tsflags=nodocs rh-git29 which && \
-    touch ${APP_ROOT}/etc/passwd && \
-    chmod 666 ${APP_ROOT}/etc/passwd
-
+RUN yum install -y --setopt=tsflags=nodocs rh-git29 which
 
 # fall back to S2I user
 # see https://github.com/sclorg/s2i-python-container/blob/master/3.6/Dockerfile#L64
@@ -32,5 +29,9 @@ ENV USER_NAME=kebechet \
     USER_UID=1001
 
 COPY container-root ${APP_ROOT}
+
+RUN chgrp -R 0 ${APP_ROOT} && \
+    chmod -R g=u ${APP_ROOT} && \
+    chmod g=u /etc/passwd
 
 ENTRYPOINT [ "/opt/app-root/bin/uid_entrypoint" ]
