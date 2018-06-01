@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "Moin, this is nss_wrapper, running $@ ..."
+echo "Moin, this is nss_entrypoint, running $@ ..."
 
 export USER_ID=$(id -u)
 export GROUP_ID=$(id -g)

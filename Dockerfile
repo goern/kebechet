@@ -33,4 +33,4 @@ ENV USER_NAME=kebechet \
 
 COPY container-root ${APP_ROOT}
 
-ENTRYPOINT [ "/opt/app-root/bin/nss_entrypoint" ]
+ENTRYPOINT [ "/opt/app-root/bin/uid_entrypoint" ]
